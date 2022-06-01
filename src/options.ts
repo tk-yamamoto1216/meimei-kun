@@ -4,12 +4,24 @@ export const processOptions = [
     jp: "登録する",
   },
   {
+    en: "find",
+    jp: "見つける",
+  },
+  {
     en: "post",
     jp: "投稿する",
   },
   {
     en: "add",
     jp: "追加する",
+  },
+  {
+    en: "delete",
+    jp: "削除する",
+  },
+  {
+    en: "rehabilitate",
+    jp: "厚生する",
   },
 ];
 
@@ -20,10 +32,10 @@ export const prepositionOptions = [
   },
   {
     en: "from",
-    jp: "から",
+    jp: "~から",
   },
   {
     en: "by",
-    jp: "用いて",
+    jp: "~を用いて",
   },
 ];

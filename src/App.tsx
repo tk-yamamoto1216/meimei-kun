@@ -7,18 +7,27 @@ import { useState } from "react";
 import { TextField } from "@mui/material";
 import { useDeepl } from "./useDeepl";
 import ReactLoading from "react-loading";
+import { capitalize } from "./utils";
 
 function App() {
   const [process, setProcess] = useState("");
   const [preposition, setPreposition] = useState("");
   const [subject, setSubject] = useState("");
+  // FIX
   const [subject2, setSubject2] = useState("");
   const [functionName, setFunctionName] = useState("");
-  const { translateText, capitalize, isLoading } = useDeepl();
+
+  const japaneseSentence = () => {
+    return `${subject2}${preposition.replace("~", "")}${subject}を${process}`;
+  };
+
+  const { translateText, isLoading } = useDeepl();
   const handleChangeProcess = (e: SelectChangeEvent) => {
+    console.log(1);
     setProcess(e.target.value);
   };
   const handleChangePreposition = (e: SelectChangeEvent) => {
+    console.log(1);
     if (e.target.value === "なし") {
       setPreposition("");
       return;
@@ -35,7 +44,6 @@ function App() {
       return;
     }
     const translatedText = await translateText(subject);
-    console.log(translatedText);
     if (!translatedText) {
       alert("対象の翻訳に失敗しました。");
       return;
@@ -45,7 +53,9 @@ function App() {
       return;
     }
     const str = capitalize(translatedText);
-    setFunctionName(`${target.en}${str}${targetPreposition?.en ?? ""}`);
+    const translatedText2 = await translateText(subject2);
+    const str2 = capitalize(translatedText2 ?? "");
+    setFunctionName(`${target.en}${str}${targetPreposition?.en ?? ""}${str2}`);
   };
 
   return (
@@ -90,14 +100,7 @@ function App() {
         Mei Mei!!
       </Button>
 
-      <h1>
-        {subject}
-        {subject ? "を" : ""}
-        {subject2}
-        {subject2 ? "を" : ""}
-        {preposition}
-        {process}
-      </h1>
+      <h1>{japaneseSentence()}</h1>
       {isLoading ? (
         <ReactLoading
           className="loading"

@@ -20,14 +20,8 @@ export const useDeepl = () => {
     }
   };
 
-  /* １文字目だけ大文字に  */
-  const capitalize = (str: string) => {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  };
-
   return {
     translateText,
-    capitalize,
     isLoading,
   };
 };
