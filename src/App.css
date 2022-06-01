@@ -2,3 +2,8 @@
   text-align: center;
   padding: 40px;
 }
+
+.input-container {
+  display: flex;
+  gap: 10px;
+}

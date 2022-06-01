@@ -1,47 +1,61 @@
 import "./App.css";
+import { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+import AppSelectBox from "./components/AppSelectBox";
+import { prepositionOptions, processOptions } from "./options";
+import { useState } from "react";
+import { TextField } from "@mui/material";
 
 function App() {
-  const options = [
-    {
-      en: "register",
-      jp: "登録する",
-    },
-    {
-      en: "post",
-      jp: "投稿する",
-    },
-    {
-      en: "add",
-      jp: "追加する",
-    },
-  ];
-
-  const handleChange = (e: SelectChangeEvent) => {
-    console.log(e.target.value);
+  const [process, setProcess] = useState("");
+  const [preposition, setPreposition] = useState("");
+  const [subject, setSubject] = useState("");
+  const [functionName, setFunctionName] = useState("");
+  const handleChangeProcess = (e: SelectChangeEvent) => {
+    setProcess(e.target.value);
   };
+  const handleChangePreposition = (e: SelectChangeEvent) => {
+    setPreposition(e.target.value);
+  };
+  const nameFunction = () => {
+    const target = processOptions.find((option) => option.jp === process);
+    if (!target) {
+      throw new Error();
+    }
+    setFunctionName(target.en);
+  };
+
   return (
     <div className="App">
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Age</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value="選択してね"
-          label="Age"
-          onChange={handleChange}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-      </FormControl>
-      <Button variant="contained">Hello World</Button>
+      <div className="input-container">
+        <AppSelectBox
+          onChange={handleChangeProcess}
+          options={processOptions}
+          selectedItem={process}
+          label="処理"
+        />
+        <TextField
+          id="outlined-basic"
+          label="対象"
+          variant="outlined"
+          onChange={(e) => setSubject(e.target.value)}
+        />
+        <AppSelectBox
+          onChange={handleChangePreposition}
+          options={prepositionOptions}
+          selectedItem={preposition}
+          label="前置詞"
+        />
+        <Button variant="contained" onClick={() => nameFunction()}>
+          Mei Mei
+        </Button>
+      </div>
+      {/* 日本語 */}
+      <h1>
+        {subject}
+        {`を${process}`}
+      </h1>
+      <h1>{functionName}</h1>
     </div>
   );
 }
