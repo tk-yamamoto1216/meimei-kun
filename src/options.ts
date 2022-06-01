@@ -15,11 +15,15 @@ export const processOptions = [
 
 export const prepositionOptions = [
   {
+    en: "no",
+    jp: "なし",
+  },
+  {
     en: "from",
-    jp: "~から",
+    jp: "から",
   },
   {
     en: "by",
-    jp: "~を用いて",
+    jp: "用いて",
   },
 ];

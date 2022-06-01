@@ -6,46 +6,62 @@ import { prepositionOptions, processOptions } from "./options";
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { useDeepl } from "./useDeepl";
+import ReactLoading from "react-loading";
 
 function App() {
   const [process, setProcess] = useState("");
   const [preposition, setPreposition] = useState("");
   const [subject, setSubject] = useState("");
+  const [subject2, setSubject2] = useState("");
   const [functionName, setFunctionName] = useState("");
-  const { translateText, capitalize } = useDeepl();
+  const { translateText, capitalize, isLoading } = useDeepl();
   const handleChangeProcess = (e: SelectChangeEvent) => {
     setProcess(e.target.value);
   };
   const handleChangePreposition = (e: SelectChangeEvent) => {
+    if (e.target.value === "なし") {
+      setPreposition("");
+      return;
+    }
     setPreposition(e.target.value);
   };
+  const target = processOptions.find((option) => option.jp === process);
+  const targetPreposition = prepositionOptions.find(
+    (option) => option.jp === preposition
+  );
   const nameFunction = async () => {
-    const target = processOptions.find((option) => option.jp === process);
     if (!target) {
       alert("「処理」が入力されていません。");
       return;
     }
     const translatedText = await translateText(subject);
+    console.log(translatedText);
     if (!translatedText) {
-      alert("翻訳に失敗しました。");
+      alert("対象の翻訳に失敗しました。");
+      return;
+    }
+    if (subject2 && !targetPreposition) {
+      alert("前置詞を入力してください。");
       return;
     }
     const str = capitalize(translatedText);
-    setFunctionName(target.en + str);
+    setFunctionName(`${target.en}${str}${targetPreposition?.en ?? ""}`);
   };
 
   return (
     <div className="App">
+      <h1>めいめいくん</h1>
       <div className="input-container">
         <AppSelectBox
           onChange={handleChangeProcess}
           options={processOptions}
           selectedItem={process}
-          label="処理"
+          label="処理を選択してください。"
         />
         <TextField
+          fullWidth
           id="outlined-basic"
-          label="対象"
+          label="対象を入力してください。"
           variant="outlined"
           onChange={(e) => setSubject(e.target.value)}
         />
@@ -53,18 +69,46 @@ function App() {
           onChange={handleChangePreposition}
           options={prepositionOptions}
           selectedItem={preposition}
-          label="前置詞"
+          label="前置詞を選択してください。"
         />
-        <Button variant="contained" onClick={() => nameFunction()}>
-          Mei Mei
-        </Button>
+        {preposition && (
+          <TextField
+            fullWidth
+            id="outlined-basic"
+            label="前置詞の後に来る名詞を入力してください。"
+            variant="outlined"
+            onChange={(e) => setSubject2(e.target.value)}
+          />
+        )}
       </div>
-      {/* 日本語 */}
+      <Button
+        className="button"
+        variant="contained"
+        size="large"
+        onClick={() => nameFunction()}
+      >
+        Mei Mei!!
+      </Button>
+
       <h1>
         {subject}
-        {`を${process}`}
+        {subject ? "を" : ""}
+        {subject2}
+        {subject2 ? "を" : ""}
+        {preposition}
+        {process}
       </h1>
-      <h1>{functionName}</h1>
+      {isLoading ? (
+        <ReactLoading
+          className="loading"
+          type="spin"
+          color="black"
+          height={"5%"}
+          width={"5%"}
+        />
+      ) : (
+        <h1>{functionName}</h1>
+      )}
     </div>
   );
 }
