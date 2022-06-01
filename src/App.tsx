@@ -5,24 +5,33 @@ import AppSelectBox from "./components/AppSelectBox";
 import { prepositionOptions, processOptions } from "./options";
 import { useState } from "react";
 import { TextField } from "@mui/material";
+import { useDeepl } from "./useDeepl";
 
 function App() {
   const [process, setProcess] = useState("");
   const [preposition, setPreposition] = useState("");
   const [subject, setSubject] = useState("");
   const [functionName, setFunctionName] = useState("");
+  const { translateText, capitalize } = useDeepl();
   const handleChangeProcess = (e: SelectChangeEvent) => {
     setProcess(e.target.value);
   };
   const handleChangePreposition = (e: SelectChangeEvent) => {
     setPreposition(e.target.value);
   };
-  const nameFunction = () => {
+  const nameFunction = async () => {
     const target = processOptions.find((option) => option.jp === process);
     if (!target) {
-      throw new Error();
+      alert("「処理」が入力されていません。");
+      return;
     }
-    setFunctionName(target.en);
+    const translatedText = await translateText(subject);
+    if (!translatedText) {
+      alert("翻訳に失敗しました。");
+      return;
+    }
+    const str = capitalize(translatedText);
+    setFunctionName(target.en + str);
   };
 
   return (
