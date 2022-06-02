@@ -3,17 +3,17 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import AppSelectBox from "./components/AppSelectBox";
 import { prepositionOptions, processOptions } from "./options";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import { useDeepl } from "./useDeepl";
 import ReactLoading from "react-loading";
-import { capitalize } from "./utils";
+import { capitalize, formatFunctionName } from "./utils";
 
 function App() {
   const [process, setProcess] = useState("");
   const [preposition, setPreposition] = useState("");
   const [subject, setSubject] = useState("");
-  // FIX
+  // FIX: 2はあかんなぁ
   const [subject2, setSubject2] = useState("");
   const [functionName, setFunctionName] = useState("");
 
@@ -53,8 +53,20 @@ function App() {
     const str = capitalize(translatedText);
     const translatedText2 = await translateText(subject2);
     const str2 = capitalize(translatedText2 ?? "");
-    setFunctionName(`${target.en}${str}${targetPreposition?.en ?? ""}${str2}`);
+    // FIX: 見辛
+    setFunctionName(
+      `${target.en}${formatFunctionName(str)}${
+        targetPreposition?.en ?? ""
+      }${str2}`
+    );
   };
+
+  useEffect(() => {
+    if (functionName.length <= 30) {
+      return;
+    }
+    alert(`${functionName.length}文字。変数名が長すぎます。`);
+  }, [functionName]);
 
   return (
     <div className="App">

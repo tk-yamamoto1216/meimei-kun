@@ -8,7 +8,7 @@ export const formatFunctionName = (text: string) => {
   /* 生成された関数から()を取り除く */
   const removeInsideParentheses = text.replace(/ *\([^)]*\) */g, "");
   /*  ハイフン区切りを空白に置換 */
-  const hyphenToBlank = removeInsideParentheses.replace("-", " ");
+  const hyphenToBlank = removeInsideParentheses.replace(/-/g, " ");
   /* キャメルケースに変換し空白を取り除く */
   const capitalizedTexts = hyphenToBlank
     .split(" ")
