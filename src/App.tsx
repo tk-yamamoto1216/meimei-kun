@@ -23,11 +23,9 @@ function App() {
 
   const { translateText, isLoading } = useDeepl();
   const handleChangeProcess = (e: SelectChangeEvent) => {
-    console.log(1);
     setProcess(e.target.value);
   };
   const handleChangePreposition = (e: SelectChangeEvent) => {
-    console.log(1);
     if (e.target.value === "なし") {
       setPreposition("");
       return;
