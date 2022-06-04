@@ -3,7 +3,7 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import AppSelectBox from "./components/AppSelectBox";
 import { prepositionOptions, processOptions } from "./options";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import { useDeepl } from "./useDeepl";
 import ReactLoading from "react-loading";
@@ -25,13 +25,13 @@ function App() {
   const handleChangeProcess = (e: SelectChangeEvent) => {
     setProcess(e.target.value);
   };
-  const handleChangePreposition = (e: SelectChangeEvent) => {
+  const handleChangePreposition = useCallback((e: SelectChangeEvent) => {
     if (e.target.value === "なし") {
       setPreposition("");
       return;
     }
     setPreposition(e.target.value);
-  };
+  }, []);
   const target = processOptions.find((option) => option.jp === process);
   const targetPreposition = prepositionOptions.find(
     (option) => option.jp === preposition
