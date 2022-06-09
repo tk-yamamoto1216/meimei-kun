@@ -4,11 +4,12 @@ import Button from "@mui/material/Button";
 import AppSelectBox from "./components/AppSelectBox";
 import AppHeader from "./components/AppHeader";
 import { prepositionOptions, processOptions } from "./options";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import { useDeepl } from "./hooks/useDeepl";
 import ReactLoading from "react-loading";
 import { capitalize, formatFunctionName } from "./utils";
+import { useValidate } from "./hooks/useValidate";
 
 function App() {
   const [processing, setProcess] = useState("");
@@ -18,6 +19,7 @@ function App() {
   // FIX: 2はあかんなぁ
   const [subject2, setSubject2] = useState("");
   const [functionName, setFunctionName] = useState("");
+  const { isValid, validateValue } = useValidate();
 
   const japaneseSentence = () => {
     return `${subject2}${preposition.replace("~", "")}${subject}${
@@ -40,7 +42,7 @@ function App() {
   const targetPreposition = prepositionOptions.find(
     (option) => option.jp === preposition
   );
-  console.log(process.env);
+
   const nameFunction = async () => {
     if (!target) {
       alert("「処理」が入力されていません。");
@@ -64,6 +66,16 @@ function App() {
     setFunctionName(name);
   };
 
+  // バリデーション
+  useEffect(() => {
+    validateValue({
+      processing,
+      preposition,
+      subject,
+      subject2,
+    });
+  }, [processing, preposition, subject, subject2]);
+
   return (
     <div className="App">
       <AppHeader />
@@ -82,7 +94,7 @@ function App() {
             variant="outlined"
             onChange={(e) => setSubject(e.target.value)}
           />
-          {subject && process && (
+          {subject && processing && (
             <AppSelectBox
               onChange={handleChangePreposition}
               options={prepositionOptions}
@@ -105,6 +117,7 @@ function App() {
           className="button"
           variant="contained"
           size="large"
+          disabled={!isValid}
           onClick={() => nameFunction()}
         >
           Mei Mei!!
