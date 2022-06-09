@@ -19,7 +19,9 @@ function App() {
   const [functionName, setFunctionName] = useState("");
 
   const japaneseSentence = () => {
-    return `${subject2}${preposition.replace("~", "")}${subject}を${process}`;
+    return `${subject2}${preposition.replace("~", "")}${subject}${
+      subject ? "を" : ""
+    }${process}`;
   };
 
   const { translateText, isLoading } = useDeepl();
@@ -54,17 +56,10 @@ function App() {
     const str = capitalize(translatedText);
     const translatedText2 = await translateText(subject2);
     const str2 = capitalize(translatedText2 ?? "");
-    // FIX: 見辛
-    setFunctionName(
-      `${target.en}${formatFunctionName(str)}${
-        targetPreposition?.en ?? ""
-      }${str2}`
-    );
-
-    // if (functionName.length <= 20) {
-    //   return;
-    // }
-    // alert(`変数名が長すぎます。20文字以下になるようにしてください（>_<）`);
+    const name = `${target.en}${formatFunctionName(str)}${
+      targetPreposition?.en ?? ""
+    }${str2}`;
+    setFunctionName(name);
   };
 
   return (
@@ -85,12 +80,14 @@ function App() {
             variant="outlined"
             onChange={(e) => setSubject(e.target.value)}
           />
-          <AppSelectBox
-            onChange={handleChangePreposition}
-            options={prepositionOptions}
-            selectedItem={preposition}
-            label="前置詞"
-          />
+          {subject && process && (
+            <AppSelectBox
+              onChange={handleChangePreposition}
+              options={prepositionOptions}
+              selectedItem={preposition}
+              label="前置詞"
+            />
+          )}
           {preposition && (
             <TextField
               fullWidth
@@ -101,9 +98,7 @@ function App() {
             />
           )}
         </div>
-
         <h1>{japaneseSentence()}</h1>
-
         <Button
           className="button"
           variant="contained"
@@ -122,10 +117,9 @@ function App() {
             width={"5%"}
           />
         ) : (
-          <h1>{functionName}</h1>
+          <p className="function">{functionName}</p>
         )}
-      </div>{" "}
-      {/* 700pxくらい */}
+      </div>
       <img src={"http://localhost:3001/IMG_0134.PNG"} alt={"logo"} />
     </div>
   );

@@ -1,9 +1,14 @@
 .App {
   text-align: center;
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
 }
 
 .container {
-  padding: 40px;
+  padding: 40px 40px 0;
 }
 
 .input-container {
@@ -12,8 +17,18 @@
   margin-bottom: 20px;
 }
 
+.button {
+  margin-bottom: 20px !important;
+}
+
 .loading {
   margin: 0 auto;
+}
+
+.function {
+  font-size: 100px;
+  font-weight: bold;
+  margin: 0;
 }
 
 .logo {

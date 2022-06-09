@@ -10,7 +10,7 @@ const AppHeader = () => {
           <Toolbar disableGutters>
             <img
               className="logo"
-              src={"http://localhost:3001/meimeiロゴ2.PNG"}
+              src={"http://localhost:3001/meimei_logo.png"}
               alt={"logo"}
             />
           </Toolbar>
