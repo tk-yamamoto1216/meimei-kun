@@ -1,19 +1,20 @@
-import "./App.css";
+import "./assets/styles/App.css";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import AppSelectBox from "./components/AppSelectBox";
 import AppHeader from "./components/AppHeader";
 import { prepositionOptions, processOptions } from "./options";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { TextField } from "@mui/material";
-import { useDeepl } from "./useDeepl";
+import { useDeepl } from "./hooks/useDeepl";
 import ReactLoading from "react-loading";
 import { capitalize, formatFunctionName } from "./utils";
 
 function App() {
-  const [process, setProcess] = useState("");
+  const [processing, setProcess] = useState("");
   const [preposition, setPreposition] = useState("");
   const [subject, setSubject] = useState("");
+  // 前置詞の対象
   // FIX: 2はあかんなぁ
   const [subject2, setSubject2] = useState("");
   const [functionName, setFunctionName] = useState("");
@@ -21,7 +22,7 @@ function App() {
   const japaneseSentence = () => {
     return `${subject2}${preposition.replace("~", "")}${subject}${
       subject ? "を" : ""
-    }${process}`;
+    }${processing}`;
   };
 
   const { translateText, isLoading } = useDeepl();
@@ -35,10 +36,11 @@ function App() {
     }
     setPreposition(e.target.value);
   }, []);
-  const target = processOptions.find((option) => option.jp === process);
+  const target = processOptions.find((option) => option.jp === processing);
   const targetPreposition = prepositionOptions.find(
     (option) => option.jp === preposition
   );
+  console.log(process.env);
   const nameFunction = async () => {
     if (!target) {
       alert("「処理」が入力されていません。");
@@ -70,7 +72,7 @@ function App() {
           <AppSelectBox
             onChange={handleChangeProcess}
             options={processOptions}
-            selectedItem={process}
+            selectedItem={processing}
             label="処理"
           />
           <TextField
@@ -120,7 +122,7 @@ function App() {
           <p className="function">{functionName}</p>
         )}
       </div>
-      <img src={"http://localhost:3001/IMG_0134.PNG"} alt={"logo"} />
+      <img src={`${process.env.REACT_APP_URL}/IMG_0134.PNG`} alt={"logo"} />
     </div>
   );
 }
