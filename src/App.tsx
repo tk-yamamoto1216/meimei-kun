@@ -2,6 +2,7 @@ import "./App.css";
 import { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import AppSelectBox from "./components/AppSelectBox";
+import AppHeader from "./components/AppHeader";
 import { prepositionOptions, processOptions } from "./options";
 import { useCallback, useEffect, useState } from "react";
 import { TextField } from "@mui/material";
@@ -59,69 +60,73 @@ function App() {
         targetPreposition?.en ?? ""
       }${str2}`
     );
-  };
 
-  useEffect(() => {
-    if (functionName.length <= 30) {
-      return;
-    }
-    alert(`${functionName.length}文字。変数名が長すぎます。`);
-  }, [functionName]);
+    // if (functionName.length <= 20) {
+    //   return;
+    // }
+    // alert(`変数名が長すぎます。20文字以下になるようにしてください（>_<）`);
+  };
 
   return (
     <div className="App">
-      <h1>めいめいくん</h1>
-      <div className="input-container">
-        <AppSelectBox
-          onChange={handleChangeProcess}
-          options={processOptions}
-          selectedItem={process}
-          label="処理を選択してください。"
-        />
-        <TextField
-          fullWidth
-          id="outlined-basic"
-          label="対象を入力してください。"
-          variant="outlined"
-          onChange={(e) => setSubject(e.target.value)}
-        />
-        <AppSelectBox
-          onChange={handleChangePreposition}
-          options={prepositionOptions}
-          selectedItem={preposition}
-          label="前置詞を選択してください。"
-        />
-        {preposition && (
+      <AppHeader />
+      <div className="container">
+        <div className="input-container">
+          <AppSelectBox
+            onChange={handleChangeProcess}
+            options={processOptions}
+            selectedItem={process}
+            label="処理"
+          />
           <TextField
             fullWidth
             id="outlined-basic"
-            label="前置詞の後に来る名詞を入力してください。"
+            label="対象"
             variant="outlined"
-            onChange={(e) => setSubject2(e.target.value)}
+            onChange={(e) => setSubject(e.target.value)}
           />
-        )}
-      </div>
-      <Button
-        className="button"
-        variant="contained"
-        size="large"
-        onClick={() => nameFunction()}
-      >
-        Mei Mei!!
-      </Button>
+          <AppSelectBox
+            onChange={handleChangePreposition}
+            options={prepositionOptions}
+            selectedItem={preposition}
+            label="前置詞"
+          />
+          {preposition && (
+            <TextField
+              fullWidth
+              id="outlined-basic"
+              label="前置詞の後に来る名詞を入力してください。"
+              variant="outlined"
+              onChange={(e) => setSubject2(e.target.value)}
+            />
+          )}
+        </div>
 
-      <h1>{japaneseSentence()}</h1>
-      {isLoading ? (
-        <ReactLoading
-          className="loading"
-          type="spin"
-          color="black"
-          height={"5%"}
-          width={"5%"}
-        />
-      ) : (
-        <h1>{functionName}</h1>
-      )}
+        <h1>{japaneseSentence()}</h1>
+
+        <Button
+          className="button"
+          variant="contained"
+          size="large"
+          onClick={() => nameFunction()}
+        >
+          Mei Mei!!
+        </Button>
+
+        {isLoading ? (
+          <ReactLoading
+            className="loading"
+            type="spin"
+            color="black"
+            height={"5%"}
+            width={"5%"}
+          />
+        ) : (
+          <h1>{functionName}</h1>
+        )}
+      </div>{" "}
+      {/* 700pxくらい */}
+      <img src={"http://localhost:3001/IMG_0134.PNG"} alt={"logo"} />
     </div>
   );
 }

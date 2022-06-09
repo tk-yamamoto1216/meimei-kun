@@ -5,7 +5,7 @@ export const processOptions = [
   },
   {
     en: "find",
-    jp: "見つける",
+    jp: "探す",
   },
   {
     en: "post",

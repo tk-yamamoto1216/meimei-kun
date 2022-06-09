@@ -1,5 +1,8 @@
 .App {
   text-align: center;
+}
+
+.container {
   padding: 40px;
 }
 
@@ -11,4 +14,8 @@
 
 .loading {
   margin: 0 auto;
+}
+
+.logo {
+  width: 180px;
 }
