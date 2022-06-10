@@ -79,8 +79,26 @@ function App() {
 
   // モーダル
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = useCallback(() => {
+    setOpen(true);
+  }, [open]);
   const handleClose = () => setOpen(false);
+
+  // ボタン
+  const FuncName: React.FC = () => {
+    if (isLoading) {
+      return (
+        <ReactLoading
+          className="loading"
+          type="spin"
+          color="black"
+          height={"5%"}
+          width={"5%"}
+        />
+      );
+    }
+    return <p className="function">{functionName}</p>;
+  };
 
   return (
     <div className="App">
@@ -139,17 +157,7 @@ function App() {
             命名
           </Button>
         )}
-        {isLoading ? (
-          <ReactLoading
-            className="loading"
-            type="spin"
-            color="black"
-            height={"5%"}
-            width={"5%"}
-          />
-        ) : (
-          <p className="function">{functionName}</p>
-        )}
+        <FuncName />
       </div>
       <img src={`${process.env.REACT_APP_URL}/IMG_0134.PNG`} alt={"logo"} />
       <AppModal handleClose={handleClose} open={open} />
