@@ -10,6 +10,7 @@ import { useDeepl } from "./hooks/useDeepl";
 import ReactLoading from "react-loading";
 import { capitalize, formatFunctionName } from "./utils";
 import { useValidate } from "./hooks/useValidate";
+import AppModal from "./components/AppModal";
 
 function App() {
   const [processing, setProcess] = useState("");
@@ -76,9 +77,14 @@ function App() {
     });
   }, [processing, preposition, subject, subject2]);
 
+  // モーダル
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <div className="App">
-      <AppHeader />
+      <AppHeader handleOpen={handleOpen} />
       <div className="container">
         <div className="input-container">
           <AppSelectBox
@@ -113,16 +119,26 @@ function App() {
           )}
         </div>
         <h1>{japaneseSentence()}</h1>
-        <Button
-          className="button"
-          variant="contained"
-          size="large"
-          disabled={!isValid}
-          onClick={() => nameFunction()}
-        >
-          Mei Mei!!
-        </Button>
-
+        {functionName ? (
+          <Button
+            className="button"
+            variant="contained"
+            size="large"
+            onClick={() => setFunctionName("")}
+          >
+            リセット
+          </Button>
+        ) : (
+          <Button
+            className="button"
+            variant="contained"
+            size="large"
+            disabled={!isValid}
+            onClick={() => nameFunction()}
+          >
+            命名
+          </Button>
+        )}
         {isLoading ? (
           <ReactLoading
             className="loading"
@@ -136,6 +152,7 @@ function App() {
         )}
       </div>
       <img src={`${process.env.REACT_APP_URL}/IMG_0134.PNG`} alt={"logo"} />
+      <AppModal handleClose={handleClose} open={open} />
     </div>
   );
 }
