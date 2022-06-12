@@ -1,8 +1,10 @@
-import { SelectChangeEvent } from '@mui/material';
-import { useCallback, useState } from 'react';
 import { prepositionOptions, processOptions } from '../options';
 import { capitalize, formatFunctionName } from '../utils';
+import { SelectChangeEvent } from '@mui/material';
+import { useCallback, useState } from 'react';
+import { TranslationType } from '../types';
 import { useDeepl } from './useDeepl';
+import { useFormatRomanAlphabet } from './useFormatRomanAlphabet';
 
 export const useGenerateFunctionName = () => {
   const [processing, setProcess] = useState('');
@@ -39,15 +41,44 @@ export const useGenerateFunctionName = () => {
     (option) => option.jp === preposition
   );
 
-  // Deepl API を叩いて整形
+  // 英語 or ローマ字
+  const { ENG, ROMAN } = TranslationType;
+  const [translationType, changeType] = useState<typeof ENG | typeof ROMAN>(
+    ENG
+  ); // ちゃう気が、、
+  const [caution, setCaution] = useState('');
+  const handleChangeType = useCallback((id: typeof ENG | typeof ROMAN) => {
+    changeType(id);
+    console.log(typeof id);
+    // FIX: すまん
+    if (Number(id) === ROMAN) {
+      setCaution('ローマ字を翻訳する場合はひらがなで入力してください');
+      return;
+    }
+    setCaution('');
+  }, []);
+
   const { translateText, isLoading } = useDeepl();
+  const { formatKanaToRaman } = useFormatRomanAlphabet();
   const nameFunction = async () => {
     if (!target) {
       alert('「処理」が入力されていません。');
       return;
     }
-    const translatedText = await translateText(subject);
-    if (!translatedText) {
+
+    let translatedSubject: string | undefined = '';
+
+    console.log(23232, translationType);
+
+    // ローマ字の場合
+    if (translationType === ROMAN) {
+      translatedSubject = formatKanaToRaman(subject);
+    } else {
+      // 英語の場合 Deepl API を叩いて整形
+      translatedSubject = await translateText(subject);
+    }
+
+    if (!translatedSubject) {
       alert('対象の翻訳に失敗しました。');
       return;
     }
@@ -55,7 +86,7 @@ export const useGenerateFunctionName = () => {
       alert('前置詞を入力してください。');
       return;
     }
-    const str = capitalize(translatedText);
+    const str = capitalize(translatedSubject);
     const translatedText2 = await translateText(nounAfterPreposition);
     const str2 = capitalize(translatedText2 ?? '');
     const name = `${target.en}${formatFunctionName(str)}${
@@ -78,5 +109,8 @@ export const useGenerateFunctionName = () => {
     handleChangePreposition,
     setnounAfterPreposition,
     setFunctionName,
+    translationType,
+    handleChangeType,
+    caution,
   };
 };

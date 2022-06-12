@@ -1,18 +1,19 @@
-import './assets/styles/App.css';
-import { SelectChangeEvent } from '@mui/material/Select';
+import { useCallback, useEffect, useState } from 'react';
+// MUIs
 import Button from '@mui/material/Button';
+import { TextField } from '@mui/material';
+// Components
+import ReactLoading from 'react-loading';
 import AppSelectBox from './components/AppSelectBox';
 import AppHeader from './components/AppHeader';
-import { prepositionOptions, processOptions } from './options';
-import { useCallback, useEffect, useState } from 'react';
-import { TextField } from '@mui/material';
-import { useDeepl } from './hooks/useDeepl';
-import ReactLoading from 'react-loading';
-import { capitalize, formatFunctionName } from './utils';
-import { useValidate } from './hooks/useValidate';
-import AppModal from './components/AppModal';
 import AppRadioButton from './components/AppRadioButton';
+import AppModal from './components/AppModal';
+// Hooks
+import { useValidate } from './hooks/useValidate';
 import { useGenerateFunctionName } from './hooks/useGenerateFunctionName';
+// Others
+import './assets/styles/App.css';
+import { prepositionOptions, processOptions } from './options';
 
 function App() {
   const {
@@ -29,6 +30,8 @@ function App() {
     handleChangePreposition,
     setnounAfterPreposition,
     setFunctionName,
+    handleChangeType,
+    caution,
   } = useGenerateFunctionName();
   const { isValid, validateValue } = useValidate();
 
@@ -44,10 +47,10 @@ function App() {
 
   // モーダル
   const [open, setOpen] = useState(false);
-  const handleOpen = useCallback(() => setOpen(true), [open]);
+  const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
 
-  // ボタン
+  // 関数名
   const FuncName: React.FC = () => {
     if (isLoading) {
       return (
@@ -61,6 +64,14 @@ function App() {
       );
     }
     return <p className="function">{functionName}</p>;
+  };
+
+  // 命名 or リセット
+  const clickButton = () => {
+    if (functionName) {
+      return setFunctionName('');
+    }
+    nameFunction();
   };
 
   return (
@@ -100,27 +111,17 @@ function App() {
           )}
         </div>
         <h1>{japaneseSentence()}</h1>
-        <AppRadioButton />
-        {functionName ? (
-          <Button
-            className="button"
-            variant="contained"
-            size="large"
-            onClick={() => setFunctionName('')}
-          >
-            リセット
-          </Button>
-        ) : (
-          <Button
-            className="button"
-            variant="contained"
-            size="large"
-            disabled={!isValid}
-            onClick={() => nameFunction()}
-          >
-            命名
-          </Button>
-        )}
+        <p>{caution}</p>
+        <AppRadioButton handleChange={handleChangeType} />
+        <Button
+          className="button"
+          variant="contained"
+          size="large"
+          disabled={!isValid}
+          onClick={() => clickButton()}
+        >
+          {functionName ? 'リセット' : '命名'}
+        </Button>
         <FuncName />
       </div>
       <img src={`${process.env.REACT_APP_URL}/IMG_0134.PNG`} alt={'logo'} />
