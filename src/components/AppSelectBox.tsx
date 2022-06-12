@@ -1,9 +1,9 @@
-import React from "react";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import { memo } from "react";
+import React, { useState } from 'react';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import { memo } from 'react';
 
 type Props = {
   options: {
@@ -21,6 +21,7 @@ const AppSelectBox: React.FC<Props> = ({
   selectedItem,
   label,
 }: Props) => {
+  const [open, setOpen] = useState(false);
   return (
     <>
       <FormControl fullWidth>
@@ -28,6 +29,7 @@ const AppSelectBox: React.FC<Props> = ({
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
+          aria-expanded={open}
           value={selectedItem}
           label={label}
           onChange={onChange}
