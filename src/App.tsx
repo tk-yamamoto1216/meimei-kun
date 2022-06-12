@@ -16,14 +16,14 @@ function App() {
   const [processing, setProcess] = useState('');
   const [preposition, setPreposition] = useState('');
   const [subject, setSubject] = useState('');
-  // 前置詞の対象
-  // FIX: 2はあかんなぁ
-  const [subject2, setSubject2] = useState('');
+  // NOTE: 前置詞の対象
+  // with〇〇 の「〇〇」にあたる部分
+  const [nounAfterPreposition, setnounAfterPreposition] = useState('');
   const [functionName, setFunctionName] = useState('');
   const { isValid, validateValue } = useValidate();
 
   const japaneseSentence = () => {
-    return `${subject2}${preposition.replace('~', '')}${subject}${
+    return `${nounAfterPreposition}${preposition.replace('~', '')}${subject}${
       subject ? 'を' : ''
     }${processing}`;
   };
@@ -54,12 +54,12 @@ function App() {
       alert('対象の翻訳に失敗しました。');
       return;
     }
-    if (subject2 && !targetPreposition) {
+    if (nounAfterPreposition && !targetPreposition) {
       alert('前置詞を入力してください。');
       return;
     }
     const str = capitalize(translatedText);
-    const translatedText2 = await translateText(subject2);
+    const translatedText2 = await translateText(nounAfterPreposition);
     const str2 = capitalize(translatedText2 ?? '');
     const name = `${target.en}${formatFunctionName(str)}${
       targetPreposition?.en ?? ''
@@ -73,9 +73,9 @@ function App() {
       processing,
       preposition,
       subject,
-      subject2,
+      nounAfterPreposition,
     });
-  }, [processing, preposition, subject, subject2]);
+  }, [processing, preposition, subject, nounAfterPreposition]);
 
   // モーダル
   const [open, setOpen] = useState(false);
@@ -132,7 +132,7 @@ function App() {
               id="outlined-basic"
               label="前置詞の後に来る名詞を入力してください。"
               variant="outlined"
-              onChange={(e) => setSubject2(e.target.value)}
+              onChange={(e) => setnounAfterPreposition(e.target.value)}
             />
           )}
         </div>

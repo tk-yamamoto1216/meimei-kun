@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 interface InputValues {
   processing: string;
   preposition: string;
   subject: string;
-  subject2: string;
+  nounAfterPreposition: string;
 }
 
 export const useValidate = () => {
@@ -20,12 +20,12 @@ export const useValidate = () => {
       return;
     }
 
-    if (values.preposition && !values.subject2) {
+    if (values.preposition && !values.nounAfterPreposition) {
       setValidate(false);
       return;
     }
 
-    if (!values.preposition && values.subject2) {
+    if (!values.preposition && values.nounAfterPreposition) {
       setValidate(false);
       return;
     }
