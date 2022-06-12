@@ -48,8 +48,6 @@ export const useGenerateFunctionName = () => {
   ); // ちゃう気が、、
   const [caution, setCaution] = useState('');
   const handleChangeType = useCallback((id: typeof ENG | typeof ROMAN) => {
-    changeType(id);
-    console.log(typeof id);
     // FIX: すまん
     if (Number(id) === ROMAN) {
       setCaution('ローマ字を翻訳する場合はひらがなで入力してください');
@@ -68,11 +66,12 @@ export const useGenerateFunctionName = () => {
 
     let translatedSubject: string | undefined = '';
 
-    console.log(23232, translationType);
-
     // ローマ字の場合
-    if (translationType === ROMAN) {
-      translatedSubject = formatKanaToRaman(subject);
+    // FIX: なんか string で返ってきちゃうから一旦力業
+    if (typeof translationType === 'string') {
+      if (translationType === '1') {
+        translatedSubject = formatKanaToRaman(subject);
+      }
     } else {
       // 英語の場合 Deepl API を叩いて整形
       translatedSubject = await translateText(subject);

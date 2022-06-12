@@ -1,9 +1,8 @@
+import { kanaToRoman } from '../kana';
+
 export const useFormatRomanAlphabet = () => {
   const formatKanaToRaman = (subject: string) => {
-    if (!subject) {
-      return '';
-    }
-    return 'RomanText';
+    return kanaToRoman(subject);
   };
 
   return {
