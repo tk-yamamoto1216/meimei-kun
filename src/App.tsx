@@ -11,6 +11,7 @@ import ReactLoading from 'react-loading';
 import { capitalize, formatFunctionName } from './utils';
 import { useValidate } from './hooks/useValidate';
 import AppModal from './components/AppModal';
+import AppRadioButton from './components/AppRadioButton';
 
 function App() {
   const [processing, setProcess] = useState('');
@@ -29,9 +30,10 @@ function App() {
   };
 
   const { translateText, isLoading } = useDeepl();
-  const handleChangeProcess = useCallback((e: SelectChangeEvent) => {
-    setProcess(e.target.value);
-  }, []);
+  const handleChangeProcess = useCallback(
+    (e: SelectChangeEvent) => setProcess(e.target.value),
+    []
+  );
   const handleChangePreposition = useCallback((e: SelectChangeEvent) => {
     if (e.target.value === 'なし') {
       setPreposition('');
@@ -79,10 +81,11 @@ function App() {
 
   // モーダル
   const [open, setOpen] = useState(false);
-  const handleOpen = useCallback(() => {
-    setOpen(true);
-  }, [open]);
+  const handleOpen = useCallback(() => setOpen(true), [open]);
   const handleClose = useCallback(() => setOpen(false), []);
+
+  // 英語かローマ字か
+  const [isSelectedEng, setEngFlag] = useState(true);
 
   // ボタン
   const FuncName: React.FC = () => {
@@ -137,6 +140,7 @@ function App() {
           )}
         </div>
         <h1>{japaneseSentence()}</h1>
+        <AppRadioButton />
         {functionName ? (
           <Button
             className="button"
