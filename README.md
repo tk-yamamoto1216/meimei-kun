@@ -11,6 +11,12 @@ npm run build
 firebase deploy
 ```
 
+# Trouble Shooting
+
+## .env が反映されない
+
+build し直してみてください
+
 # URLs 
 
 https://meimei-ar.web.app/
