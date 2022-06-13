@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 // MUIs
-import Button from '@mui/material/Button';
-import { TextField } from '@mui/material';
+import Button from "@mui/material/Button";
+import { TextField } from "@mui/material";
 // Components
-import ReactLoading from 'react-loading';
-import AppSelectBox from './components/AppSelectBox';
-import AppHeader from './components/AppHeader';
-import AppRadioButton from './components/AppRadioButton';
-import AppModal from './components/AppModal';
+import ReactLoading from "react-loading";
+import AppSelectBox from "./components/AppSelectBox";
+import AppHeader from "./components/AppHeader";
+import AppRadioButton from "./components/AppRadioButton";
+import AppModal from "./components/AppModal";
 // Hooks
-import { useValidate } from './hooks/useValidate';
-import { useGenerateFunctionName } from './hooks/useGenerateFunctionName';
+import { useValidate } from "./hooks/useValidate";
+import { useGenerateFunctionName } from "./hooks/useGenerateFunctionName";
 // Others
-import './assets/styles/App.css';
-import { prepositionOptions, processOptions } from './options';
+import "./assets/styles/App.css";
+import { prepositionOptions, processOptions } from "./options";
 
 function App() {
   const {
@@ -58,8 +58,8 @@ function App() {
           className="loading"
           type="spin"
           color="black"
-          height={'5%'}
-          width={'5%'}
+          height={"5%"}
+          width={"5%"}
         />
       );
     }
@@ -69,7 +69,7 @@ function App() {
   // 命名 or リセット
   const clickButton = () => {
     if (functionName) {
-      return setFunctionName('');
+      return setFunctionName("");
     }
     nameFunction();
   };
@@ -85,13 +85,16 @@ function App() {
             selectedItem={processing}
             label="処理"
           />
-          <TextField
-            fullWidth
-            id="outlined-basic"
-            label="対象"
-            variant="outlined"
-            onChange={(e) => setSubject(e.target.value)}
-          />
+          <div className="text-field-container">
+            <TextField
+              fullWidth
+              id="outlined-basic"
+              label="対象"
+              variant="outlined"
+              onChange={(e) => setSubject(e.target.value)}
+            />
+            <AppRadioButton handleChange={handleChangeType} />
+          </div>
           {subject && processing && (
             <AppSelectBox
               onChange={handleChangePreposition}
@@ -112,7 +115,6 @@ function App() {
         </div>
         <h1>{japaneseSentence()}</h1>
         <p>{caution}</p>
-        <AppRadioButton handleChange={handleChangeType} />
         <Button
           className="button"
           variant="contained"
@@ -120,11 +122,11 @@ function App() {
           disabled={!isValid}
           onClick={() => clickButton()}
         >
-          {functionName ? 'リセット' : '命名'}
+          {functionName ? "リセット" : "命名"}
         </Button>
         <FuncName />
       </div>
-      <img src={`${process.env.REACT_APP_URL}/IMG_0134.PNG`} alt={'logo'} />
+      <img src={`${process.env.REACT_APP_URL}/IMG_0134.PNG`} alt={"logo"} />
       <AppModal handleClose={handleClose} open={open} />
     </div>
   );
