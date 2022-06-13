@@ -19,6 +19,7 @@
 
 .button {
   margin-bottom: 20px !important;
+  font-weight: bold !important;
 }
 
 .loading {
@@ -29,6 +30,7 @@
   font-size: 100px;
   font-weight: bold;
   margin: 0;
+  overflow-wrap: break-word;
 }
 
 .logo {

@@ -14,6 +14,7 @@ export const useGenerateFunctionName = () => {
   // with〇〇 の「〇〇」にあたる部分
   const [nounAfterPreposition, setnounAfterPreposition] = useState("");
   const [functionName, setFunctionName] = useState("");
+  const [subjectLabel, setLabel] = useState("対象");
 
   const japaneseSentence = () => {
     return `${nounAfterPreposition}${preposition.replace("~", "")}${subject}${
@@ -49,9 +50,13 @@ export const useGenerateFunctionName = () => {
   const [caution, setCaution] = useState("");
   const handleChangeType = useCallback((id: typeof ENG | typeof ROMAN) => {
     if (Number(id) === ROMAN) {
+      changeType(ROMAN);
+      setLabel("対象（ひらがな）");
       setCaution("ローマ字を翻訳する場合はひらがなで入力してください");
       return;
     }
+    setLabel("対象");
+    changeType(ENG);
     setCaution("");
   }, []);
 
@@ -66,11 +71,8 @@ export const useGenerateFunctionName = () => {
     let translatedSubject: string | undefined = "";
 
     // ローマ字の場合
-    // FIX: なんか string で返ってきちゃうから一旦力業
-    if (typeof translationType === "string") {
-      if (translationType === "1") {
-        translatedSubject = formatKanaToRaman(subject);
-      }
+    if (translationType === ROMAN) {
+      translatedSubject = formatKanaToRaman(subject);
     } else {
       // 英語の場合 Deepl API を叩いて整形
       translatedSubject = await translateText(subject);
@@ -110,5 +112,6 @@ export const useGenerateFunctionName = () => {
     translationType,
     handleChangeType,
     caution,
+    subjectLabel,
   };
 };

@@ -3,10 +3,10 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-} from '@mui/material';
-import { css } from '@emotion/react';
-import { memo } from 'react';
-import { TranslationType } from '../types';
+} from "@mui/material";
+import { css } from "@emotion/react";
+import { memo } from "react";
+import { TranslationType } from "../types";
 
 const style = css(`
   display: flex;
@@ -24,6 +24,7 @@ const AppRadioButton = (props: Props) => {
     <div css={style}>
       <FormControl>
         <RadioGroup
+          defaultValue={ENG}
           aria-labelledby="demo-radio-buttons-group-label"
           name="radio-buttons-group"
         >

@@ -32,6 +32,8 @@ function App() {
     setFunctionName,
     handleChangeType,
     caution,
+    translationType,
+    subjectLabel,
   } = useGenerateFunctionName();
   const { isValid, validateValue } = useValidate();
 
@@ -43,6 +45,7 @@ function App() {
       subject,
       nounAfterPreposition,
     });
+    setFunctionName("");
   }, [processing, preposition, subject, nounAfterPreposition]);
 
   // モーダル
@@ -66,14 +69,6 @@ function App() {
     return <p className="function">{functionName}</p>;
   };
 
-  // 命名 or リセット
-  const clickButton = () => {
-    if (functionName) {
-      return setFunctionName("");
-    }
-    nameFunction();
-  };
-
   return (
     <div className="App">
       <AppHeader handleOpen={handleOpen} />
@@ -89,7 +84,7 @@ function App() {
             <TextField
               fullWidth
               id="outlined-basic"
-              label="対象"
+              label={subjectLabel}
               variant="outlined"
               onChange={(e) => setSubject(e.target.value)}
             />
@@ -114,19 +109,24 @@ function App() {
           )}
         </div>
         <h1>{japaneseSentence()}</h1>
-        <p>{caution}</p>
+        {/* <p>{caution}</p> */}
         <Button
           className="button"
           variant="contained"
           size="large"
           disabled={!isValid}
-          onClick={() => clickButton()}
+          onClick={() => nameFunction()}
         >
-          {functionName ? "リセット" : "命名"}
+          命名
         </Button>
         <FuncName />
       </div>
-      <img src={`${process.env.REACT_APP_URL}/IMG_0134.PNG`} alt={"logo"} />
+      <img
+        src={`${process.env.REACT_APP_URL}/${
+          functionName ? "IMG_0134.PNG" : "IMG_0132.PNG"
+        }`}
+        alt={"image"}
+      />
       <AppModal handleClose={handleClose} open={open} />
     </div>
   );
