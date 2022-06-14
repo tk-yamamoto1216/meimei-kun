@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 // MUIs
-import Button from "@mui/material/Button";
-import { TextField } from "@mui/material";
+import Button from '@mui/material/Button';
+import { TextField } from '@mui/material';
 // Components
-import ReactLoading from "react-loading";
-import AppSelectBox from "./components/AppSelectBox";
-import AppHeader from "./components/AppHeader";
-import AppRadioButton from "./components/AppRadioButton";
-import AppModal from "./components/AppModal";
+import ReactLoading from 'react-loading';
+import AppSelectBox from './components/AppSelectBox';
+import AppHeader from './components/AppHeader';
+import AppRadioButton from './components/AppRadioButton';
+import AppModal from './components/AppModal';
 // Hooks
-import { useValidate } from "./hooks/useValidate";
-import { useGenerateFunctionName } from "./hooks/useGenerateFunctionName";
+import { useValidate } from './hooks/useValidate';
+import { useGenerateFunctionName } from './hooks/useGenerateFunctionName';
 // Others
-import "./assets/styles/App.css";
-import { prepositionOptions, processOptions } from "./options";
+import './assets/styles/App.css';
+import { prepositionOptions, processOptions } from './options';
 
 function App() {
   const {
@@ -35,7 +35,7 @@ function App() {
     translationType,
     subjectLabel,
   } = useGenerateFunctionName();
-  const { isValid, validateValue } = useValidate();
+  const { isValid, validateValue, isValidKana, validateKana } = useValidate();
 
   // バリデーション
   useEffect(() => {
@@ -45,8 +45,12 @@ function App() {
       subject,
       nounAfterPreposition,
     });
-    setFunctionName("");
+    setFunctionName('');
   }, [processing, preposition, subject, nounAfterPreposition]);
+
+  useEffect(() => {
+    validateKana(subject, translationType);
+  }, [subject, translationType]);
 
   // モーダル
   const [open, setOpen] = useState(false);
@@ -61,8 +65,8 @@ function App() {
           className="loading"
           type="spin"
           color="black"
-          height={"5%"}
-          width={"5%"}
+          height={'5%'}
+          width={'5%'}
         />
       );
     }
@@ -83,6 +87,10 @@ function App() {
           <div className="text-field-container">
             <TextField
               fullWidth
+              error={!isValidKana}
+              helperText={
+                !isValidKana ? 'ローマ字の時はひらがなで入力してください' : ''
+              }
               id="outlined-basic"
               label={subjectLabel}
               variant="outlined"
@@ -114,7 +122,7 @@ function App() {
           className="button"
           variant="contained"
           size="large"
-          disabled={!isValid}
+          disabled={!isValid || !isValidKana}
           onClick={() => nameFunction()}
         >
           命名
@@ -123,9 +131,9 @@ function App() {
       </div>
       <img
         src={`${process.env.REACT_APP_URL}/${
-          functionName ? "IMG_0134.PNG" : "IMG_0132.PNG"
+          functionName ? 'IMG_0134.PNG' : 'IMG_0132.PNG'
         }`}
-        alt={"image"}
+        alt={'meimei'}
       />
       <AppModal handleClose={handleClose} open={open} />
     </div>
