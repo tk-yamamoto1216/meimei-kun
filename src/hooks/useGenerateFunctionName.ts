@@ -1,24 +1,24 @@
-import { prepositionOptions, processOptions } from "../options";
-import { capitalize, formatFunctionName } from "../utils";
-import { SelectChangeEvent } from "@mui/material";
-import { useCallback, useState } from "react";
-import { TranslationType } from "../types";
-import { useDeepl } from "./useDeepl";
-import { useFormatRomanAlphabet } from "./useFormatRomanAlphabet";
+import { prepositionOptions, processOptions } from '../options';
+import { capitalize, formatFunctionName } from '../utils';
+import { SelectChangeEvent } from '@mui/material';
+import { useCallback, useState } from 'react';
+import { TranslationType } from '../types';
+import { useDeepl } from './useDeepl';
+import { useFormatRomanAlphabet } from './useFormatRomanAlphabet';
 
 export const useGenerateFunctionName = () => {
-  const [processing, setProcess] = useState("");
-  const [preposition, setPreposition] = useState("");
-  const [subject, setSubject] = useState("");
+  const [processing, setProcess] = useState('');
+  const [preposition, setPreposition] = useState('');
+  const [subject, setSubject] = useState('');
   // NOTE: 前置詞の対象
   // with〇〇 の「〇〇」にあたる部分
-  const [nounAfterPreposition, setnounAfterPreposition] = useState("");
-  const [functionName, setFunctionName] = useState("");
-  const [subjectLabel, setLabel] = useState("対象");
+  const [nounAfterPreposition, setnounAfterPreposition] = useState('');
+  const [functionName, setFunctionName] = useState('');
+  const [subjectLabel, setLabel] = useState('対象');
 
   const japaneseSentence = () => {
-    return `${nounAfterPreposition}${preposition.replace("~", "")}${subject}${
-      subject ? "を" : ""
+    return `${nounAfterPreposition}${preposition.replace('~', '')}${subject}${
+      subject ? 'を' : ''
     }${processing}`;
   };
 
@@ -28,8 +28,8 @@ export const useGenerateFunctionName = () => {
   );
 
   const handleChangePreposition = useCallback((e: SelectChangeEvent) => {
-    if (e.target.value === "なし") {
-      setPreposition("");
+    if (e.target.value === 'なし') {
+      setPreposition('');
       return;
     }
     setPreposition(e.target.value);
@@ -46,29 +46,50 @@ export const useGenerateFunctionName = () => {
   const { ENG, ROMAN } = TranslationType;
   const [translationType, changeType] = useState<typeof ENG | typeof ROMAN>(
     ENG
-  ); // ちゃう気が、、
-  const [caution, setCaution] = useState("");
+  );
+
+  const [caution, setCaution] = useState('');
   const handleChangeType = useCallback((id: typeof ENG | typeof ROMAN) => {
     if (Number(id) === ROMAN) {
       changeType(ROMAN);
-      setLabel("対象（ひらがな）");
-      setCaution("ローマ字を翻訳する場合はひらがなで入力してください");
+      setLabel('対象（ひらがな）');
+      setCaution('ローマ字を翻訳する場合はひらがなで入力してください');
       return;
     }
-    setLabel("対象");
+    setLabel('対象');
     changeType(ENG);
-    setCaution("");
+    setCaution('');
   }, []);
+
+  // 英語 or ローマ字（前置詞）
+  const [prepositionTranslationType, changePrepositionType] = useState<
+    typeof ENG | typeof ROMAN
+  >(ENG);
+  const [subjectPrepositionLabel, setPrepositionLabel] = useState('対象');
+  const [prepositionCaution, setPrepositionCaution] = useState('');
+  const handleChangePrepositionType = (id: typeof ENG | typeof ROMAN) => {
+    if (Number(id) === ROMAN) {
+      changePrepositionType(ROMAN);
+      setPrepositionLabel('対象（ひらがな）');
+      setPrepositionCaution(
+        'ローマ字を翻訳する場合はひらがなで入力してください'
+      );
+      return;
+    }
+    setPrepositionLabel('対象');
+    changePrepositionType(ENG);
+    setPrepositionCaution('');
+  };
 
   const { translateText, isLoading } = useDeepl();
   const { formatKanaToRaman } = useFormatRomanAlphabet();
   const nameFunction = async () => {
     if (!target) {
-      alert("「処理」が入力されていません。");
+      alert('「処理」が入力されていません。');
       return;
     }
 
-    let translatedSubject: string | undefined = "";
+    let translatedSubject: string | undefined = '';
 
     // ローマ字の場合
     if (translationType === ROMAN) {
@@ -79,18 +100,26 @@ export const useGenerateFunctionName = () => {
     }
 
     if (!translatedSubject) {
-      alert("対象の翻訳に失敗しました。");
+      alert('対象の翻訳に失敗しました。');
       return;
     }
     if (nounAfterPreposition && !targetPreposition) {
-      alert("前置詞を入力してください。");
+      alert('前置詞を入力してください。');
       return;
     }
     const str = capitalize(translatedSubject);
-    const translatedText2 = await translateText(nounAfterPreposition);
-    const str2 = capitalize(translatedText2 ?? "");
+    // FIX: 2あかーん
+    let translatedText2: string | undefined = '';
+    // ローマ字の場合
+    if (prepositionTranslationType === ROMAN) {
+      translatedText2 = formatKanaToRaman(nounAfterPreposition);
+    } else {
+      // 英語の場合 Deepl API を叩いて整形
+      translatedText2 = await translateText(nounAfterPreposition);
+    }
+    const str2 = capitalize(translatedText2 ?? '');
     const name = `${target.en}${formatFunctionName(str)}${
-      targetPreposition?.en ?? ""
+      targetPreposition?.en ?? ''
     }${str2}`;
     setFunctionName(name);
   };
@@ -113,5 +142,6 @@ export const useGenerateFunctionName = () => {
     handleChangeType,
     caution,
     subjectLabel,
+    handleChangePrepositionType,
   };
 };

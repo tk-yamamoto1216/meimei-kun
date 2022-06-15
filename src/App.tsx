@@ -31,7 +31,7 @@ function App() {
     setnounAfterPreposition,
     setFunctionName,
     handleChangeType,
-    caution,
+    handleChangePrepositionType,
     translationType,
     subjectLabel,
   } = useGenerateFunctionName();
@@ -107,17 +107,19 @@ function App() {
             />
           )}
           {preposition && (
-            <TextField
-              fullWidth
-              id="outlined-basic"
-              label="前置詞の後に来る名詞を入力してください。"
-              variant="outlined"
-              onChange={(e) => setnounAfterPreposition(e.target.value)}
-            />
+            <div className="text-field-container">
+              <TextField
+                fullWidth
+                id="outlined-basic"
+                label="前置詞の後に来る名詞を入力してください。"
+                variant="outlined"
+                onChange={(e) => setnounAfterPreposition(e.target.value)}
+              />
+              <AppRadioButton handleChange={handleChangePrepositionType} />
+            </div>
           )}
         </div>
         <h1>{japaneseSentence()}</h1>
-        {/* <p>{caution}</p> */}
         <Button
           className="button"
           variant="contained"

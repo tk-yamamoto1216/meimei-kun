@@ -3,10 +3,10 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-} from "@mui/material";
-import { css } from "@emotion/react";
-import { memo } from "react";
-import { TranslationType } from "../types";
+} from '@mui/material';
+import { css } from '@emotion/react';
+import { memo } from 'react';
+import { TranslationType } from '../types';
 
 const style = css(`
   display: flex;
@@ -33,13 +33,13 @@ const AppRadioButton = (props: Props) => {
             <FormControlLabel
               value={ENG}
               control={<Radio />}
-              label="英語"
+              label="英語で翻訳"
               onChange={(e: any) => handleChange(e.target.value)}
             />
             <FormControlLabel
               value={ROMAN}
               control={<Radio />}
-              label="ローマ字"
+              label="ローマ字で翻訳"
               onChange={(e: any) => handleChange(e.target.value)}
             />
           </div>
