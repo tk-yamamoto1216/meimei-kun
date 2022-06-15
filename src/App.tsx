@@ -14,6 +14,7 @@ import { useGenerateFunctionName } from './hooks/useGenerateFunctionName';
 // Others
 import './assets/styles/App.css';
 import { prepositionOptions, processOptions } from './options';
+import { useForm } from 'react-hook-form';
 
 function App() {
   const {
@@ -73,6 +74,8 @@ function App() {
     return <p className="function">{functionName}</p>;
   };
 
+  const { register } = useForm();
+
   return (
     <div className="App">
       <AppHeader handleOpen={handleOpen} />
@@ -94,6 +97,7 @@ function App() {
               id="outlined-basic"
               label={subjectLabel}
               variant="outlined"
+              {...register('name')}
               onChange={(e) => setSubject(e.target.value)}
             />
             <AppRadioButton handleChange={handleChangeType} />
