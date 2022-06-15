@@ -11,26 +11,26 @@ interface InputValues {
 
 export const useValidate = () => {
   const [isValid, setValidate] = useState(false);
-  const [isValidKana, setValidateKana] = useState(false);
   const { ENG, ROMAN } = TranslationType;
 
   const validateValue = (values: InputValues) => {
-    if (!values.processing) {
+    const { processing, preposition, subject, nounAfterPreposition } = values;
+    if (!processing) {
       setValidate(false);
       return;
     }
 
-    if (!values.subject) {
+    if (!subject) {
       setValidate(false);
       return;
     }
 
-    if (values.preposition && !values.nounAfterPreposition) {
+    if (preposition && nounAfterPreposition) {
       setValidate(false);
       return;
     }
 
-    if (!values.preposition && values.nounAfterPreposition) {
+    if (preposition && nounAfterPreposition) {
       setValidate(false);
       return;
     }
@@ -39,17 +39,11 @@ export const useValidate = () => {
   };
 
   const validateKana = (text: string, type: typeof ENG | typeof ROMAN) => {
-    if (type === ENG) {
-      setValidateKana(true);
-      return;
-    }
-    if (!text.match(/^[ぁ-んー　]*$/)) {
-      //"ー"の後ろの文字は全角スペースです。
-      setValidateKana(false);
-      return;
-    }
-    setValidateKana(true);
+    if (type === ENG) return true;
+    //"ー"の後ろの文字は全角スペースです。
+    if (!text.match(/^[ぁ-んー　]*$/)) return false;
+    return true;
   };
 
-  return { isValid, validateValue, isValidKana, validateKana };
+  return { isValid, validateValue, validateKana };
 };

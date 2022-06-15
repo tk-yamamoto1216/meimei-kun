@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import { TextField } from '@mui/material';
 // Components
-import ReactLoading from 'react-loading';
 import AppSelectBox from './components/AppSelectBox';
 import AppHeader from './components/AppHeader';
 import AppRadioButton from './components/AppRadioButton';
@@ -15,7 +14,6 @@ import { useGenerateFunctionName } from './hooks/useGenerateFunctionName';
 import './assets/styles/App.css';
 import { prepositionOptions, processOptions } from './options';
 import AppLoading from './components/AppLoading';
-import Loading from 'react-loading';
 
 function App() {
   const {
@@ -36,8 +34,9 @@ function App() {
     handleChangePrepositionType,
     translationType,
     subjectLabel,
+    prepositionTranslationType,
   } = useGenerateFunctionName();
-  const { isValid, validateValue, isValidKana, validateKana } = useValidate();
+  const { isValid, validateValue, validateKana } = useValidate();
 
   // バリデーション
   useEffect(() => {
@@ -50,9 +49,22 @@ function App() {
     setFunctionName('');
   }, [processing, preposition, subject, nounAfterPreposition]);
 
+  // 対象バリデーション
+  const [isValidKana, setValidateKana] = useState(true);
   useEffect(() => {
-    validateKana(subject, translationType);
+    const valid = validateKana(subject, translationType);
+    setValidateKana(valid);
   }, [subject, translationType]);
+
+  // 前置詞の後の名詞バリデーション
+  const [isValidPrepositionKana, setValidatePrepositionKana] = useState(true);
+  useEffect(() => {
+    const valid = validateKana(
+      nounAfterPreposition,
+      prepositionTranslationType
+    );
+    setValidatePrepositionKana(valid);
+  }, [nounAfterPreposition, prepositionTranslationType]);
 
   // モーダル
   const [open, setOpen] = useState(false);
@@ -103,6 +115,12 @@ function App() {
             <div className="text-field-container">
               <TextField
                 fullWidth
+                error={!isValidPrepositionKana}
+                helperText={
+                  !isValidPrepositionKana
+                    ? 'ローマ字の時はひらがなで入力してください'
+                    : ''
+                }
                 id="outlined-basic"
                 label="前置詞の後に来る名詞を入力してください。"
                 variant="outlined"

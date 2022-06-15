@@ -143,5 +143,8 @@ export const useGenerateFunctionName = () => {
     caution,
     subjectLabel,
     handleChangePrepositionType,
+    subjectPrepositionLabel,
+    prepositionCaution,
+    prepositionTranslationType,
   };
 };
