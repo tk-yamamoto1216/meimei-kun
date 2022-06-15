@@ -11,7 +11,9 @@ export const useDeepl = () => {
         text: subject,
         target_lang: "EN",
         auth_key: process.env.REACT_APP_DEEPL_KEY ?? "",
+        source_lang: "JA",
       });
+
       return res.data.translations[0].text;
     } catch (error) {
       console.log("API error", error);

@@ -2,18 +2,20 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import Stepper from "./Stepper";
 
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  height: "60%",
-  width: "80%",
+  height: 400,
+  width: 410,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  margin: "auto",
+  borderRadius: 2,
 };
 
 type Props = {
@@ -31,11 +33,8 @@ const AppModal: React.FC<Props> = ({ open, handleClose }: Props) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          使い方
-        </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          見て学べ
+          <Stepper />
         </Typography>
       </Box>
     </Modal>
