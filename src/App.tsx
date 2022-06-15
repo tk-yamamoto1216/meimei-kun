@@ -14,6 +14,8 @@ import { useGenerateFunctionName } from './hooks/useGenerateFunctionName';
 // Others
 import './assets/styles/App.css';
 import { prepositionOptions, processOptions } from './options';
+import AppLoading from './components/AppLoading';
+import Loading from 'react-loading';
 
 function App() {
   const {
@@ -57,19 +59,10 @@ function App() {
   const handleOpen = useCallback(() => setOpen(true), []);
   const handleClose = useCallback(() => setOpen(false), []);
 
-  // 関数名
+  // 関数名（ローディング込み）
+  // 別に分けんでよかったわ
   const FuncName: React.FC = () => {
-    if (isLoading) {
-      return (
-        <ReactLoading
-          className="loading"
-          type="spin"
-          color="black"
-          height={'5%'}
-          width={'5%'}
-        />
-      );
-    }
+    if (isLoading) return <AppLoading />;
     return <p className="function">{functionName}</p>;
   };
 
