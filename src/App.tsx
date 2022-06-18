@@ -36,39 +36,46 @@ function App() {
     subjectLabel,
     prepositionTranslationType,
   } = useGenerateFunctionName();
-  const { isValid, validateValue, validateKana } = useValidate();
+  const {
+    isValidSubject,
+    isValidPreposition,
+    isValidSubjectKana,
+    isValidPrepositionKana,
+    validateSubjectValue,
+    validatePreposition,
+    validateSubjectKana,
+    validatePrepositionKana,
+  } = useValidate();
 
   // バリデーション
   useEffect(() => {
-    validateValue({
-      processing,
-      preposition,
-      subject,
-      nounAfterPreposition,
-    });
+    validateSubjectValue(subject, processing);
+    validateSubjectKana(subject, translationType);
     setFunctionName('');
-  }, [processing, preposition, subject, nounAfterPreposition]);
+
+    console.log(isValidSubject);
+  }, [processing, preposition, subject, nounAfterPreposition, translationType]);
 
   // 対象バリデーション
-  const [isValidKana, setValidateKana] = useState(true);
-  useEffect(() => {
-    const valid = validateKana(subject, translationType);
-    setValidateKana(valid);
-  }, [subject, translationType]);
+  // const [isValidKana, setValidateKana] = useState(true);
+  // useEffect(() => {
+  //   const valid = validateKana(subject, translationType);
+  //   setValidateKana(valid);
+  // }, [subject, translationType]);
 
   // 補助の後の名詞バリデーション
-  const [isValidPrepositionKana, setValidatePrepositionKana] = useState(true);
-  useEffect(() => {
-    const valid = validateKana(
-      nounAfterPreposition,
-      prepositionTranslationType
-    );
-    setValidatePrepositionKana(valid);
-  }, [nounAfterPreposition, prepositionTranslationType]);
-
-  // バリデーション
-  // 処理と対象が入力されていればtrue
-  // 補助が
+  // const [isValidPrepositionKana, setValidatePrepositionKana] = useState(true);
+  // useEffect(() => {
+  //   if (!nounAfterPreposition) {
+  //     setValidatePrepositionKana(true);
+  //     return;
+  //   }
+  //   const valid = validateKana(
+  //     nounAfterPreposition,
+  //     prepositionTranslationType
+  //   );
+  //   setValidatePrepositionKana(valid);
+  // }, [nounAfterPreposition, prepositionTranslationType]);
 
   // モーダル
   const [open, setOpen] = useState(false);
@@ -96,9 +103,11 @@ function App() {
           <div className="text-field-container">
             <TextField
               fullWidth
-              error={!isValidKana}
+              error={!isValidSubjectKana}
               helperText={
-                !isValidKana ? 'ローマ字の時はひらがなで入力してください' : ''
+                !isValidSubjectKana
+                  ? 'ローマ字の時はひらがなで入力してください'
+                  : ''
               }
               id="outlined-basic"
               label={subjectLabel}
@@ -139,7 +148,7 @@ function App() {
           className="button"
           variant="contained"
           size="large"
-          disabled={!isValid && !isValidKana}
+          disabled={!isValidSubject || !isValidSubjectKana}
           onClick={() => nameFunction()}
         >
           命名
