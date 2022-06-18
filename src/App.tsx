@@ -51,31 +51,17 @@ function App() {
   useEffect(() => {
     validateSubjectValue(subject, processing);
     validateSubjectKana(subject, translationType);
+    validatePreposition(preposition, nounAfterPreposition);
+    validatePrepositionKana(nounAfterPreposition, prepositionTranslationType);
     setFunctionName('');
-
-    console.log(isValidSubject);
-  }, [processing, preposition, subject, nounAfterPreposition, translationType]);
-
-  // 対象バリデーション
-  // const [isValidKana, setValidateKana] = useState(true);
-  // useEffect(() => {
-  //   const valid = validateKana(subject, translationType);
-  //   setValidateKana(valid);
-  // }, [subject, translationType]);
-
-  // 補助の後の名詞バリデーション
-  // const [isValidPrepositionKana, setValidatePrepositionKana] = useState(true);
-  // useEffect(() => {
-  //   if (!nounAfterPreposition) {
-  //     setValidatePrepositionKana(true);
-  //     return;
-  //   }
-  //   const valid = validateKana(
-  //     nounAfterPreposition,
-  //     prepositionTranslationType
-  //   );
-  //   setValidatePrepositionKana(valid);
-  // }, [nounAfterPreposition, prepositionTranslationType]);
+  }, [
+    processing,
+    preposition,
+    subject,
+    nounAfterPreposition,
+    translationType,
+    prepositionTranslationType,
+  ]);
 
   // モーダル
   const [open, setOpen] = useState(false);
@@ -148,7 +134,12 @@ function App() {
           className="button"
           variant="contained"
           size="large"
-          disabled={!isValidSubject || !isValidSubjectKana}
+          disabled={
+            !isValidSubject ||
+            !isValidSubjectKana ||
+            !isValidPreposition ||
+            !isValidPrepositionKana
+          }
           onClick={() => nameFunction()}
         >
           命名

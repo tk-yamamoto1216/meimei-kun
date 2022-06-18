@@ -9,7 +9,6 @@ export const useValidate = () => {
   // 処理 (processing) と対象(subject)のバリデーション
   const [isValidSubject, setSubjectValidate] = useState(false);
   const validateSubjectValue = (subject: string, processing: string) => {
-    console.log(subject, processing);
     if (subject && processing) {
       setSubjectValidate(true);
       return;
@@ -23,7 +22,6 @@ export const useValidate = () => {
     text: string,
     type: typeof ENG | typeof ROMAN
   ) => {
-    console.log(text);
     if (type === ENG) {
       setValidSubjectKana(true);
       return;
@@ -54,9 +52,7 @@ export const useValidate = () => {
       setPrepositionValidate(false);
       return;
     }
-    if (preposition && nounAfterPreposition) {
-      setPrepositionValidate(true);
-    }
+    setPrepositionValidate(true);
   };
 
   // 補助 (nounAfterPreposition) がローマ字のとき、ひらがなだけ許容
@@ -76,9 +72,6 @@ export const useValidate = () => {
     }
     setValidPrepositionKana(true);
   };
-
-  console.log(222, !isValidSubject);
-  console.log(333, !isValidSubjectKana);
 
   return {
     isValidSubject,
