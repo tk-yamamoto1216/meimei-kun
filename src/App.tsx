@@ -63,6 +63,11 @@ function App() {
     prepositionTranslationType,
   ]);
 
+  // 補助がないときは補助対象もない
+  useEffect(() => {
+    setnounAfterPreposition('');
+  }, [preposition]);
+
   // モーダル
   const [open, setOpen] = useState(false);
   const handleOpen = useCallback(() => setOpen(true), []);

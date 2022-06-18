@@ -103,10 +103,10 @@ export const useGenerateFunctionName = () => {
       alert('対象の翻訳に失敗しました。');
       return;
     }
-    if (nounAfterPreposition && !targetPreposition) {
-      alert('前置詞を入力してください。');
-      return;
-    }
+     if (nounAfterPreposition && !targetPreposition) {
+       alert('前置詞を入力してください。');
+       return;
+     }
     const str = capitalize(translatedSubject);
     // FIX: 2あかーん
     let translatedText2: string | undefined = '';
@@ -117,6 +117,7 @@ export const useGenerateFunctionName = () => {
       // 英語の場合 Deepl API を叩いて整形
       translatedText2 = await translateText(nounAfterPreposition);
     }
+    console.log(555, targetPreposition?.en);
     const str2 = capitalize(translatedText2 ?? '');
     const name = `${target.en}${formatFunctionName(str)}${
       targetPreposition?.en ?? ''
