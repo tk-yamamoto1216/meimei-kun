@@ -79,7 +79,7 @@ function App() {
   // 別に分けんでよかったわ
   const FuncName: React.FC = () => {
     if (isLoading) return <AppLoading />;
-    return <p className="function">{functionName || 'ああ'}</p>;
+    return <p className="function">{functionName}</p>;
   };
 
   return (
