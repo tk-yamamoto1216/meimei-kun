@@ -56,7 +56,7 @@ function App() {
     setValidateKana(valid);
   }, [subject, translationType]);
 
-  // 前置詞の後の名詞バリデーション
+  // 補助の後の名詞バリデーション
   const [isValidPrepositionKana, setValidatePrepositionKana] = useState(true);
   useEffect(() => {
     const valid = validateKana(
@@ -65,6 +65,10 @@ function App() {
     );
     setValidatePrepositionKana(valid);
   }, [nounAfterPreposition, prepositionTranslationType]);
+
+  // バリデーション
+  // 処理と対象が入力されていればtrue
+  // 補助が
 
   // モーダル
   const [open, setOpen] = useState(false);
@@ -75,7 +79,7 @@ function App() {
   // 別に分けんでよかったわ
   const FuncName: React.FC = () => {
     if (isLoading) return <AppLoading />;
-    return <p className="function">{functionName}</p>;
+    return <p className="function">{functionName || 'ああ'}</p>;
   };
 
   return (
@@ -108,7 +112,7 @@ function App() {
               onChange={handleChangePreposition}
               options={prepositionOptions}
               selectedItem={preposition}
-              label="前置詞"
+              label="補助"
             />
           )}
           {preposition && (
@@ -122,7 +126,7 @@ function App() {
                     : ''
                 }
                 id="outlined-basic"
-                label="前置詞の後に来る名詞を入力してください。"
+                label="補助の後に来る名詞を入力してください。"
                 variant="outlined"
                 onChange={(e) => setnounAfterPreposition(e.target.value)}
               />
@@ -135,7 +139,7 @@ function App() {
           className="button"
           variant="contained"
           size="large"
-          disabled={!isValid || !isValidKana}
+          disabled={!isValid && !isValidKana}
           onClick={() => nameFunction()}
         >
           命名
