@@ -1,163 +1,40 @@
-import { useCallback, useEffect, useState } from 'react';
-// MUIs
-import Button from '@mui/material/Button';
-import { TextField } from '@mui/material';
-// Components
-import AppSelectBox from './components/AppSelectBox';
-import AppHeader from './components/AppHeader';
-import AppRadioButton from './components/AppRadioButton';
-import AppModal from './components/AppModal';
-// Hooks
-import { useValidate } from './hooks/useValidate';
-import { useGenerateFunctionName } from './hooks/useGenerateFunctionName';
-// Others
+import { SubmitHandler, useForm } from 'react-hook-form';
 import './assets/styles/App.css';
-import { prepositionOptions, processOptions } from './options';
-import AppLoading from './components/AppLoading';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+type Inputs = {
+  name: string;
+  email: string;
+};
+
+const schema = yup
+  .object({
+    name: yup.string().required(),
+    email: yup.number().positive().integer().required(),
+  })
+  .required();
 
 function App() {
   const {
-    processing,
-    preposition,
-    subject,
-    nounAfterPreposition,
-    functionName,
-    japaneseSentence,
-    nameFunction,
-    isLoading,
-    handleChangeProcess,
-    setSubject,
-    handleChangePreposition,
-    setnounAfterPreposition,
-    setFunctionName,
-    handleChangeType,
-    handleChangePrepositionType,
-    translationType,
-    subjectLabel,
-    prepositionTranslationType,
-  } = useGenerateFunctionName();
-  const {
-    isValidSubject,
-    isValidPreposition,
-    isValidSubjectKana,
-    isValidPrepositionKana,
-    validateSubjectValue,
-    validatePreposition,
-    validateSubjectKana,
-    validatePrepositionKana,
-  } = useValidate();
-
-  // バリデーション
-  useEffect(() => {
-    validateSubjectValue(subject, processing);
-    validateSubjectKana(subject, translationType);
-    validatePreposition(preposition, nounAfterPreposition);
-    validatePrepositionKana(nounAfterPreposition, prepositionTranslationType);
-    setFunctionName('');
-  }, [
-    processing,
-    preposition,
-    subject,
-    nounAfterPreposition,
-    translationType,
-    prepositionTranslationType,
-  ]);
-
-  // 補助がないときは補助対象もない
-  useEffect(() => {
-    setnounAfterPreposition('');
-  }, [preposition]);
-
-  // モーダル
-  const [open, setOpen] = useState(false);
-  const handleOpen = useCallback(() => setOpen(true), []);
-  const handleClose = useCallback(() => setOpen(false), []);
-
-  // 関数名（ローディング込み）
-  // 別に分けんでよかったわ
-  const FuncName: React.FC = () => {
-    if (isLoading) return <AppLoading />;
-    return <p className="function">{functionName}</p>;
-  };
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<Inputs>({ mode: 'onChange', resolver: yupResolver(schema) });
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   return (
-    <div className="App">
-      <AppHeader handleOpen={handleOpen} />
-      <div className="container">
-        <div className="input-container">
-          <AppSelectBox
-            onChange={handleChangeProcess}
-            options={processOptions}
-            selectedItem={processing}
-            label="処理"
-          />
-          <div className="text-field-container">
-            <TextField
-              fullWidth
-              error={!isValidSubjectKana}
-              helperText={
-                !isValidSubjectKana
-                  ? 'ローマ字の時はひらがなで入力してください'
-                  : ''
-              }
-              id="outlined-basic"
-              label={subjectLabel}
-              variant="outlined"
-              onChange={(e) => setSubject(e.target.value)}
-            />
-            <AppRadioButton handleChange={handleChangeType} />
-          </div>
-          {subject && processing && (
-            <AppSelectBox
-              onChange={handleChangePreposition}
-              options={prepositionOptions}
-              selectedItem={preposition}
-              label="補助"
-            />
-          )}
-          {preposition && (
-            <div className="text-field-container">
-              <TextField
-                fullWidth
-                error={!isValidPrepositionKana}
-                helperText={
-                  !isValidPrepositionKana
-                    ? 'ローマ字の時はひらがなで入力してください'
-                    : ''
-                }
-                id="outlined-basic"
-                label="補助の後に来る名詞を入力してください。"
-                variant="outlined"
-                onChange={(e) => setnounAfterPreposition(e.target.value)}
-              />
-              <AppRadioButton handleChange={handleChangePrepositionType} />
-            </div>
-          )}
-        </div>
-        <h1>{japaneseSentence()}</h1>
-        <Button
-          className="button"
-          variant="contained"
-          size="large"
-          disabled={
-            !isValidSubject ||
-            !isValidSubjectKana ||
-            !isValidPreposition ||
-            !isValidPrepositionKana
-          }
-          onClick={() => nameFunction()}
-        >
-          命名
-        </Button>
-        <FuncName />
-      </div>
-      <img
-        src={`${process.env.REACT_APP_URL}/${
-          functionName ? 'IMG_0134.PNG' : 'IMG_0132.PNG'
-        }`}
-        alt={'meimei'}
-      />
-      <AppModal handleClose={handleClose} open={open} />
+    <div className="container">
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <input className="input" placeholder="email" {...register('email')} />
+        <p>{errors.email?.message}</p>
+        <input className="input" placeholder="name" {...register('name')} />
+        <p>{errors.name?.message}</p>
+
+        <button className="input" type="submit">
+          送信
+        </button>
+      </form>
     </div>
   );
 }

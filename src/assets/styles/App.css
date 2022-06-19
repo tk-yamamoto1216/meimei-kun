@@ -1,42 +1,13 @@
-.App {
-  text-align: center;
-  position: fixed;
-  left: 0px;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
-}
-
 .container {
-  padding: 40px 40px 0;
+  padding: 30px;
 }
 
-.input-container {
+.form {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  margin-bottom: 20px;
 }
 
-.button {
-  margin-bottom: 20px !important;
-  font-weight: bold !important;
-}
-
-.loading {
-  margin: 0 auto;
-}
-
-.function {
-  font-size: 85px;
-  font-weight: bold;
-  margin: 0;
-  overflow-wrap: break-word;
-}
-
-.logo {
-  width: 180px;
-}
-
-.text-field-container {
-  width: 100%;
+.input {
+  height: 40px;
 }
