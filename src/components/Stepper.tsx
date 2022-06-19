@@ -7,24 +7,36 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import Movie1 from "../assets/movies/movie1.mov";
+import Movie2 from "../assets/movies/movie2.mov";
+import Movie3 from "../assets/movies/movie3.mov";
+import Movie4 from "../assets/movies/movie4.mov";
 
 const steps = [
   {
+    label: "Meimeiとは？",
+    description: `関数名を決めてくれるサービスです。`,
+  },
+  {
     label: "処理を選択",
-    description: `はじめに、命名したい関数名の処理を選択してください。`,
+    description: `はじめに、命名したい関数の処理を選択してください。`,
+    video: Movie1,
   },
   {
     label: "対象を入力",
     description:
-      "次に、処理に対する対象を入力してください。命名ボタンを押せば、関数名が生成されます。",
+      "次に、処理に対する対象を入力してください。英語、ローマ字変換が指定可能です。命名ボタンを押せば、関数名が生成されます。",
+    video: Movie2,
   },
   {
     label: "補助を選択",
-    description: `関数名に「~から」、「~によって」などの補助をつけたい場合は選択してください。`,
+    description: `関数名に「~から」、「~を用いて」などの補助をつけたい場合は選択してください。`,
+    video: Movie3,
   },
   {
     label: "補助の対象を入力",
-    description: `補助に対する対象を入力してください。命名ボタンを押せば、関数名が生成されます。`,
+    description: `補助に対する対象を入力してください。英語、ローマ字変換が指定可能です。命名ボタンを押せば、関数名が生成されます。`,
+    video: Movie4,
   },
 ];
 
@@ -50,7 +62,7 @@ export default function Stepper() {
           display: "flex",
           alignItems: "center",
           height: 50,
-          pl: 2,
+          pl: 1,
           bgcolor: "background.default",
         }}
       >
@@ -58,10 +70,29 @@ export default function Stepper() {
           {steps[activeStep].label}
         </Typography>
       </Paper>
-      <Box sx={{ height: 255, maxWidth: 400, width: "100%", p: 2 }}>
-        {steps[activeStep].description}
+      <Box
+        sx={{
+          height: 255,
+          maxWidth: 400,
+          width: "100%",
+          p: 1,
+          textAlign: "center",
+        }}
+      >
+        <p className="modal-text">{steps[activeStep].description}</p>
+        {steps[activeStep]?.video && (
+          <video
+            src={steps[activeStep].video}
+            className="video"
+            autoPlay
+            loop
+            width={`80%`}
+            height={`80%`}
+          ></video>
+        )}
       </Box>
       <MobileStepper
+        sx={{ marginTop: 10 }}
         variant="text"
         steps={maxSteps}
         position="static"
