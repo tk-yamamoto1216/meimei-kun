@@ -11,11 +11,13 @@ const AppHeader = ({ handleOpen }: Props) => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <img
-            className="logo"
-            src={`${process.env.REACT_APP_URL}/meimei_logo.png`}
-            alt={"logo"}
-          />
+          <a href="/">
+            <img
+              className="logo"
+              src={`${process.env.REACT_APP_URL}/meimei_logo.png`}
+              alt={"logo"}
+            />
+          </a>
           {/* 後で直す */}
           <Typography
             variant="h6"

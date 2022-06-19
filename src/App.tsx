@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 // MUIs
-import Button from '@mui/material/Button';
-import { TextField } from '@mui/material';
+import Button from "@mui/material/Button";
+import { TextField, Box } from "@mui/material";
 // Components
-import AppSelectBox from './components/AppSelectBox';
-import AppHeader from './components/AppHeader';
-import AppRadioButton from './components/AppRadioButton';
-import AppModal from './components/AppModal';
+import AppSelectBox from "./components/AppSelectBox";
+import AppHeader from "./components/AppHeader";
+import AppRadioButton from "./components/AppRadioButton";
+import AppModal from "./components/AppModal";
 // Hooks
-import { useValidate } from './hooks/useValidate';
-import { useGenerateFunctionName } from './hooks/useGenerateFunctionName';
+import { useValidate } from "./hooks/useValidate";
+import { useGenerateFunctionName } from "./hooks/useGenerateFunctionName";
 // Others
-import './assets/styles/App.css';
-import { prepositionOptions, processOptions } from './options';
-import AppLoading from './components/AppLoading';
+import "./assets/styles/App.css";
+import { prepositionOptions, processOptions } from "./options";
+import AppLoading from "./components/AppLoading";
 
 function App() {
   const {
@@ -35,6 +35,7 @@ function App() {
     translationType,
     subjectLabel,
     prepositionTranslationType,
+    subjectPrepositionLabel,
   } = useGenerateFunctionName();
   const {
     isValidSubject,
@@ -53,7 +54,7 @@ function App() {
     validateSubjectKana(subject, translationType);
     validatePreposition(preposition, nounAfterPreposition);
     validatePrepositionKana(nounAfterPreposition, prepositionTranslationType);
-    setFunctionName('');
+    setFunctionName("");
   }, [
     processing,
     preposition,
@@ -65,7 +66,10 @@ function App() {
 
   // 補助がないときは補助対象もない
   useEffect(() => {
-    setnounAfterPreposition('');
+    if (preposition) {
+      return;
+    }
+    setnounAfterPreposition("");
   }, [preposition]);
 
   // モーダル
@@ -82,82 +86,89 @@ function App() {
 
   return (
     <div className="App">
-      <AppHeader handleOpen={handleOpen} />
-      <div className="container">
-        <div className="input-container">
-          <AppSelectBox
-            onChange={handleChangeProcess}
-            options={processOptions}
-            selectedItem={processing}
-            label="処理"
-          />
-          <div className="text-field-container">
-            <TextField
-              fullWidth
-              error={!isValidSubjectKana}
-              helperText={
-                !isValidSubjectKana
-                  ? 'ローマ字の時はひらがなで入力してください'
-                  : ''
-              }
-              id="outlined-basic"
-              label={subjectLabel}
-              variant="outlined"
-              onChange={(e) => setSubject(e.target.value)}
-            />
-            <AppRadioButton handleChange={handleChangeType} />
-          </div>
-          {subject && processing && (
-            <AppSelectBox
-              onChange={handleChangePreposition}
-              options={prepositionOptions}
-              selectedItem={preposition}
-              label="補助"
-            />
-          )}
-          {preposition && (
-            <div className="text-field-container">
+      <div className="app-container">
+        <AppHeader handleOpen={handleOpen} />
+        <div className="container">
+          <div className="input-container">
+            <Box sx={{ width: 300 }}>
+              <AppSelectBox
+                onChange={handleChangeProcess}
+                options={processOptions}
+                selectedItem={processing}
+                label="処理"
+              />
+            </Box>
+            <div>
               <TextField
-                fullWidth
-                error={!isValidPrepositionKana}
+                sx={{ width: 300 }}
+                error={!isValidSubjectKana}
                 helperText={
-                  !isValidPrepositionKana
-                    ? 'ローマ字の時はひらがなで入力してください'
-                    : ''
+                  !isValidSubjectKana
+                    ? "ローマ字の時はひらがなで入力してください"
+                    : ""
                 }
                 id="outlined-basic"
-                label="補助の後に来る名詞を入力してください。"
+                label={subjectLabel}
                 variant="outlined"
-                onChange={(e) => setnounAfterPreposition(e.target.value)}
+                onChange={(e) => setSubject(e.target.value)}
               />
-              <AppRadioButton handleChange={handleChangePrepositionType} />
+              <AppRadioButton handleChange={handleChangeType} />
             </div>
-          )}
+            {subject && processing && (
+              <Box sx={{ width: 300 }}>
+                <AppSelectBox
+                  onChange={handleChangePreposition}
+                  options={prepositionOptions}
+                  selectedItem={preposition}
+                  label="補助"
+                />
+              </Box>
+            )}
+            {preposition && (
+              <div>
+                <TextField
+                  sx={{ width: 300 }}
+                  error={!isValidPrepositionKana}
+                  helperText={
+                    !isValidPrepositionKana
+                      ? "ローマ字の時はひらがなで入力してください"
+                      : ""
+                  }
+                  id="outlined-basic"
+                  label={subjectPrepositionLabel}
+                  variant="outlined"
+                  onChange={(e) => setnounAfterPreposition(e.target.value)}
+                />
+                <AppRadioButton handleChange={handleChangePrepositionType} />
+              </div>
+            )}
+          </div>
+          <h2>{japaneseSentence()}</h2>
+          <Button
+            className="button"
+            variant="contained"
+            size="large"
+            disabled={
+              !isValidSubject ||
+              !isValidSubjectKana ||
+              !isValidPreposition ||
+              !isValidPrepositionKana
+            }
+            onClick={() => nameFunction()}
+          >
+            命名
+          </Button>
+          <FuncName />
         </div>
-        <h1>{japaneseSentence()}</h1>
-        <Button
-          className="button"
-          variant="contained"
-          size="large"
-          disabled={
-            !isValidSubject ||
-            !isValidSubjectKana ||
-            !isValidPreposition ||
-            !isValidPrepositionKana
-          }
-          onClick={() => nameFunction()}
-        >
-          命名
-        </Button>
-        <FuncName />
+        <img
+          className="image"
+          src={`${process.env.REACT_APP_URL}/${
+            functionName ? "IMG_0134.PNG" : "IMG_0132.PNG"
+          }`}
+          alt={"meimei"}
+        />
+        <AppModal handleClose={handleClose} open={open} />
       </div>
-      <img
-        src={`${process.env.REACT_APP_URL}/${
-          functionName ? 'IMG_0134.PNG' : 'IMG_0132.PNG'
-        }`}
-        alt={'meimei'}
-      />
-      <AppModal handleClose={handleClose} open={open} />
     </div>
   );
 }
