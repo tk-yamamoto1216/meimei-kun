@@ -86,6 +86,7 @@ export default function Stepper() {
             className="video"
             autoPlay
             loop
+            playsInline
             width={`80%`}
             height={`80%`}
           ></video>
